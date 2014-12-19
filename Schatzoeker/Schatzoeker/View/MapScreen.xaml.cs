@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Schatzoeker.ViewModel;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -24,9 +26,12 @@ namespace Schatzoeker.View
     /// </summary>
     public sealed partial class MapScreen : Page
     {
+        private MapHandler _mapHandler;
+
         public MapScreen()
         {
             this.InitializeComponent();
+            _mapHandler = new MapHandler();
         }
 
         /// <summary>
@@ -36,16 +41,27 @@ namespace Schatzoeker.View
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            MapControl1.Center =
-                new Geopoint(new BasicGeoposition()
-                {
-                    Latitude = 51.875,
-                    Longitude = 4.755
-                });
+            UpdatePositionMapScreen();
+         
+            MapControl1.Style = MapStyle.AerialWithRoads;
             MapControl1.ZoomLevel = 12;
             MapControl1.LandmarksVisible = true;
             
         }
 
+        private async void UpdatePositionMapScreen()
+        {
+           try
+           {
+               _mapHandler.CurrentPosition = await _mapHandler.Geo.GetGeopositionAsync();
+               if (_mapHandler.CurrentPosition != null)
+                   _mapHandler.setCurrentPoint(_mapHandler.CurrentPosition.Coordinate.Point);
+               MapControl1.Center = _mapHandler.getCurrentPoint();
+           }
+           catch (Exception e)
+           {
+               Debug.WriteLine(e.ToString());
+           }
+        }
     }
 }
