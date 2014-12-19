@@ -63,5 +63,15 @@ namespace Schatzoeker.View
                Debug.WriteLine(e.ToString());
            }
         }
+
+        private void setTreasurePosition(Geopoint treasurePoint)
+        {
+            treasurePoint = new Geopoint(new BasicGeoposition(){Longitude = 51.5884, Latitude = 4.7636});
+            MapIcon treasureIcon = new MapIcon();
+            treasureIcon.Location = treasurePoint;
+            treasureIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
+            treasureIcon.Title = "Schat";
+            MapControl1.MapElements.Add(treasureIcon);
+        }
     }
 }
