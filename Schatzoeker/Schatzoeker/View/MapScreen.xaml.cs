@@ -32,6 +32,7 @@ namespace Schatzoeker.View
         {
             this.InitializeComponent();
             _mapHandler = new MapHandler();
+
         }
 
         /// <summary>
@@ -44,7 +45,7 @@ namespace Schatzoeker.View
             UpdatePositionMapScreen();
          
             MapControl1.Style = MapStyle.AerialWithRoads;
-            MapControl1.ZoomLevel = 12;
+            MapControl1.ZoomLevel = 14;
             MapControl1.LandmarksVisible = true;
             
         }
@@ -73,5 +74,7 @@ namespace Schatzoeker.View
             treasureIcon.Title = "Schat";
             MapControl1.MapElements.Add(treasureIcon);
         }
+        
+        
     }
 }

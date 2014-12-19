@@ -80,7 +80,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -89,13 +88,12 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\DataHandler.cs" />
+    <Compile Include="Model\Waypoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\MapHandler.cs" />
     <Compile Include="View\EndScreen.xaml.cs">
       <DependentUpon>EndScreen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\MainScreen.xaml.cs">
-      <DependentUpon>MainScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MapScreen.xaml.cs">
       <DependentUpon>MapScreen.xaml</DependentUpon>
@@ -125,10 +123,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\EndScreen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\MainScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
