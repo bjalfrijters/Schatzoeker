@@ -10,8 +10,16 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Maps:MapControl x:Name="MapControl1" HorizontalAlignment="Left" Margin="133,157,0,0" VerticalAlignment="Top"/>
-
+        <StackPanel HorizontalAlignment="Stretch"
+                Margin="8,8,8,8" VerticalAlignment="Stretch" >
+            <TextBlock TextWrapping="NoWrap" Text="Zoek de schat!"
+                   FontSize="36" Margin="8,0,0,16"/>
+            <Maps:MapControl
+            x:Name="MapControl1"
+            MapServiceToken="nVylEGC2FeTT_KRTZkTguA"
+            Height="560"
+            Margin="0,0,0,0" />
+        </StackPanel>
     </Grid>
-        
+
 </Page>

@@ -44,6 +44,7 @@ namespace Schatzoeker.View
                 });
             MapControl1.ZoomLevel = 12;
             MapControl1.LandmarksVisible = true;
+            
         }
 
     }
