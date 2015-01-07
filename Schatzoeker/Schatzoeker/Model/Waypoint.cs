@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,22 +11,31 @@ namespace Schatzoeker.Model
 
     class Waypoint
     {
-        private Geopoint location;
-        private String discriptie;
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        [Column("description")]
+        public string _description { get; set; }
+        [Column("latitude")]
+        public double latitude { get; set; }
+        [Column("longitude")]
+        public double longitude { get; set; }
 
         public Waypoint(String discriptie, Geopoint location)
         {
-            this.discriptie = discriptie;
-            this.location = location;
-        }
-        public Geopoint getLocation()
-        {
-            return location;
+            _description = discriptie;
+            latitude = location.Position.Latitude;
+            longitude = location.Position.Longitude;
+
         }
 
-        public String getDiscriptie()
+        public Waypoint()
         {
-            return discriptie;
+
+        }
+
+        public Geopoint getLocation()
+        {
+            return new Geopoint(new BasicGeoposition() { Latitude = latitude, Longitude = longitude });
         }
 
 
