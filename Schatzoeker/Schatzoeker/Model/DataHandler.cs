@@ -171,7 +171,7 @@ namespace Schatzoeker.Model
                 Random rnd = new Random();
                 int randomnumber = rnd.Next(sum);
 
-                waypoint = cnn.Query<Puzzle>(
+                waypoint = cnn.Query<Waypoint>(
                     @"SELECT * FROM waypoint WHERE id = " + randomnumber );
 
                 cnn.Close();
