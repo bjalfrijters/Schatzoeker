@@ -14,12 +14,38 @@ namespace Schatzoeker.Model
     class DataHandler
     {
         private String dbConnection;
+
+        /// <summary>
+        /// constructor naar een bestaande database.
+        /// </summary>
+        /// <param name="inputFile">
+        /// de naam van de database file met een extensie.
+        /// </param>      
         public DataHandler(string inputFile)
         {
             dbConnection = String.Format("Data Source={0}", inputFile);
+        }
+
+        /// <summary>
+        /// constructor naar een bestaande database.
+        /// </summary>
+        /// <param name="inputFile">
+        /// de naam van de database file met een extensie.
+        /// </param>   
+        /// <param name="construct">
+        /// als deze true staat word de database leeg gegooid en opnieuw gevult met het aanmaken van de database.
+        /// </param>      
+        /// <returns>
+        /// 
+        /// </returns>
+        public DataHandler(string inputFile,bool construct)
+        {
+            dbConnection = String.Format("Data Source={0}", inputFile);
+            if (construct)
             setupDataBase();
         }
 
+        
         private void setupDataBase()
         {
             try
@@ -102,6 +128,12 @@ namespace Schatzoeker.Model
 
         }
 
+        /// <summary>
+        /// haalt alle waypoints op.
+        /// </summary>     
+        /// <returns>
+        /// een List met alle waypoints in de database.
+        /// </returns>
         public List<Waypoint> getWaypoints()
         {
             try
@@ -122,6 +154,42 @@ namespace Schatzoeker.Model
             }
         }
 
+        /// <summary>
+        /// haalt een random waypoint op uit de database.
+        /// </summary>     
+        /// <returns>
+        /// 1 waypoint random gekozen uit de database
+        /// </returns>
+        public Waypoint getRandomWaypoint(){
+            List<Waypoint> waypoint;
+            int sum = count("waypoint");
+            try
+            {
+
+                SQLiteConnection cnn = new SQLiteConnection(dbConnection);
+
+                Random rnd = new Random();
+                int randomnumber = rnd.Next(sum);
+
+                waypoint = cnn.Query<Puzzle>(
+                    @"SELECT * FROM waypoint WHERE id = " + randomnumber );
+
+                cnn.Close();
+                return waypoint[0];
+               ;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// haal alle puzzles uit de database
+        /// </summary>    
+        /// <returns>
+        /// een lijst met alle puzzles uit de database
+        /// </returns>
         public List<Puzzle> getAllPuzzles()
         {
             try
@@ -142,20 +210,28 @@ namespace Schatzoeker.Model
             }
         }
 
-        public string getRandomPuzzle(){
+        /// <summary>
+        /// vraagt een random puzzle uit de database op.
+        /// </summary>     
+        /// <returns>
+        /// een random puzzle uit de database.
+        /// </returns>
+        public Puzzle getRandomPuzzle(){
+            int sum = count("puzzle");
+            
             try
             {
                 SQLiteConnection cnn = new SQLiteConnection(dbConnection);
 
+                Random rnd = new Random();
+                int randomnumber = rnd.Next(sum);
 
                 List<Puzzle> puzzle = cnn.Query<Puzzle>(
-                    @"SELECT * FROM puzzle"
+                    @"SELECT * FROM puzzle WHERE id = " + randomnumber
                     ).ToList();
 
                 cnn.Close();
-                Random rnd = new Random();
-                string temp = puzzle[rnd.Next(puzzle.Count)]._answer;
-                return temp;
+                return puzzle[0];
             }
             catch (Exception e)
             {
@@ -163,6 +239,16 @@ namespace Schatzoeker.Model
             }
         }
 
+
+        /// <summary>
+        /// vraagt een specifieke puzzle op uit de database database aan de hand van een puzzle id.
+        /// </summary>
+        /// <param name="id">
+        /// de id van de puzzle die je wilt opvragen.
+        /// </param>       
+        /// <returns>
+        /// de aangevraagde puzzle. 
+        /// </returns>
         public string getSpesificPuzzle(int id)
         {
             try
@@ -173,6 +259,23 @@ namespace Schatzoeker.Model
                 List<Puzzle> Puzzles = cnn.Query<Puzzle>(query);
                 cnn.Close();
                 return Puzzles[0]._answer;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private int count(string tableName)
+        {
+            try
+            {
+                SQLiteConnection cnn = new SQLiteConnection(dbConnection);
+
+                string query = "SELECT id FROM " + tableName;
+                List<Puzzle> Puzzles = cnn.Query<Puzzle>(query);
+                cnn.Close();
+                return Puzzles.Count;
             }
             catch (Exception e)
             {
