@@ -5,9 +5,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
+using Windows.Devices.Geolocation.Geofencing;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Services.Maps;
+using Windows.Storage.Streams;
+using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
@@ -26,13 +32,13 @@ namespace Schatzoeker.View
     /// </summary>
     public sealed partial class MapScreen : Page
     {
-        private MapHandler _mapHandler;
+        private Geolocator _geo;
+        private MapIcon _meIcon = new MapIcon();
 
         public MapScreen()
         {
             this.InitializeComponent();
-            _mapHandler = new MapHandler();
-
+            GeofenceMonitor.Current.GeofenceStateChanged += OnGeofenceStateChanged;
         }
 
         /// <summary>
@@ -40,41 +46,102 @@ namespace Schatzoeker.View
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.
         /// This parameter is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            UpdatePositionMapScreen();
-         
-            MapControl1.Style = MapStyle.AerialWithRoads;
-            MapControl1.ZoomLevel = 14;
-            MapControl1.LandmarksVisible = true;
+            _geo = new Geolocator();
+            _geo.DesiredAccuracyInMeters = 50;
+            _geo.MovementThreshold = 10;
+            _geo.ReportInterval = 1000;
+            _geo.PositionChanged += geo_PositionChanged;
+            _meIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/me.png"));
+
+            Geoposition curPosition = await _geo.GetGeopositionAsync();
+
+            MapControl1.MapElements.Add(_meIcon);
+            AddTreasureToMap();
+            await ShowRouteOnMap(curPosition.Coordinate.Point, new Geopoint(new BasicGeoposition() { Latitude = 51.5889, Longitude = 4.7761 }));
+
+            await MapControl1.TrySetViewAsync(curPosition.Coordinate.Point, 18, 0, 0, MapAnimationKind.Default);         
             
         }
 
-        private async void UpdatePositionMapScreen()
+        private async void OnGeofenceStateChanged(GeofenceMonitor sender, object e)
         {
-           try
-           {
-               _mapHandler.CurrentPosition = await _mapHandler.Geo.GetGeopositionAsync();
-               if (_mapHandler.CurrentPosition != null)
-                   _mapHandler.setCurrentPoint(_mapHandler.CurrentPosition.Coordinate.Point);
-               MapControl1.Center = _mapHandler.getCurrentPoint();
-           }
-           catch (Exception e)
-           {
-               Debug.WriteLine(e.ToString());
-           }
+
+            var reports = sender.ReadReports();
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,  () =>
+            {
+                foreach (var report in reports)
+                {
+                    var state = report.NewState;
+
+                    // this field can be used in case you need the id of geofence
+                    var geofence = report.Geofence;
+
+                    if (state == GeofenceState.Entered)
+                    {
+                        this.Frame.Navigate(typeof(EndScreen));
+                    }
+                    else if (state == GeofenceState.Exited)
+                    {
+                       //do nothing
+                    }
+                }
+            });
         }
 
-        private void setTreasurePosition(Geopoint treasurePoint)
+        private async void geo_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            treasurePoint = new Geopoint(new BasicGeoposition(){Longitude = 51.5884, Latitude = 4.7636});
-            MapIcon treasureIcon = new MapIcon();
-            treasureIcon.Location = treasurePoint;
-            treasureIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
-            treasureIcon.Title = "Schat";
-            MapControl1.MapElements.Add(treasureIcon);
+            var location = new Geopoint(new BasicGeoposition() { Latitude = args.Position.Coordinate.Point.Position.Latitude, Longitude = args.Position.Coordinate.Point.Position.Longitude });
+            // Showing in the Map  
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                _meIcon.Location = location;
+            });
+            await MapControl1.TrySetViewAsync(location, 18, 0, 0, MapAnimationKind.None);
         }
-        
+
+        private async void MapControl1_Loaded(object sender, RoutedEventArgs args)
+        {
+            MapControl1.Style = MapStyle.AerialWithRoads;
+        }
+
+        public void AddTreasureToMap()
+        {
+            MapIcon icon = new MapIcon();
+            icon.Location = new Geopoint(new BasicGeoposition() { Latitude = 51.5889, Longitude = 004.7761 });
+            icon.NormalizedAnchorPoint = new Point(0.5, 1.0);
+            icon.Title = "Schat";
+            MapControl1.MapElements.Add(icon);
+        }
+        private async Task ShowRouteOnMap(Geopoint start, Geopoint end)
+        {
+
+            // Get the route between the points.
+            MapRouteFinderResult routeResult =
+                await MapRouteFinder.GetWalkingRouteAsync(
+                start,
+                end);
+
+
+            if (routeResult.Status == MapRouteFinderStatus.Success)
+            {
+                // Use the route to initialize a MapRouteView.
+                MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
+                viewOfRoute.RouteColor = Colors.Blue;
+                viewOfRoute.OutlineColor = Colors.Blue;
+
+                // Add the new MapRouteView to the Routes collection
+                // of the MapControl.
+                MapControl1.Routes.Add(viewOfRoute);
+                System.Diagnostics.Debug.WriteLine("MapScreen-ShowRouteOnMap: Added route to the map.");
+                // Fit the MapControl to the route.
+                //await map1.TrySetViewBoundsAsync(routeResult.Route.BoundingBox, null, Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
+            }
+
+            
+        }
         
     }
 }
