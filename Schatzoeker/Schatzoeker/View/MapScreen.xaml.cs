@@ -1,4 +1,5 @@
-﻿using Schatzoeker.ViewModel;
+﻿using Schatzoeker.Model;
+using Schatzoeker.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -34,11 +35,13 @@ namespace Schatzoeker.View
     {
         private Geolocator _geo;
         private MapIcon _meIcon = new MapIcon();
+        private DataHandler _dataHandler;
 
         public MapScreen()
         {
             this.InitializeComponent();
             GeofenceMonitor.Current.GeofenceStateChanged += OnGeofenceStateChanged;
+            _dataHandler = new DataHandler("Hoi", true);
         }
 
         /// <summary>
@@ -55,11 +58,13 @@ namespace Schatzoeker.View
             _geo.PositionChanged += geo_PositionChanged;
             _meIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/me.png"));
 
+            MapControl1.Style = MapStyle.None;
+
             Geoposition curPosition = await _geo.GetGeopositionAsync();
 
             MapControl1.MapElements.Add(_meIcon);
             AddTreasureToMap();
-            await ShowRouteOnMap(curPosition.Coordinate.Point, new Geopoint(new BasicGeoposition() { Latitude = 51.5889, Longitude = 4.7761 }));
+            //await ShowRouteOnMap(curPosition.Coordinate.Point, new Geopoint(new BasicGeoposition() { Latitude = 51.5889, Longitude = 4.7761 }));
 
             await MapControl1.TrySetViewAsync(curPosition.Coordinate.Point, 18, 0, 0, MapAnimationKind.Default);         
             
@@ -102,15 +107,12 @@ namespace Schatzoeker.View
             await MapControl1.TrySetViewAsync(location, 18, 0, 0, MapAnimationKind.None);
         }
 
-        private async void MapControl1_Loaded(object sender, RoutedEventArgs args)
-        {
-            MapControl1.Style = MapStyle.AerialWithRoads;
-        }
 
         public void AddTreasureToMap()
         {
             MapIcon icon = new MapIcon();
-            icon.Location = new Geopoint(new BasicGeoposition() { Latitude = 51.5889, Longitude = 004.7761 });
+            //icon.Location = new Geopoint(new BasicGeoposition() { Latitude = 51.5889, Longitude = 004.7761 });
+            icon.Location = _dataHandler.getRandomWaypoint().getLocation();
             icon.NormalizedAnchorPoint = new Point(0.5, 1.0);
             icon.Title = "Schat";
             MapControl1.MapElements.Add(icon);
@@ -129,8 +131,8 @@ namespace Schatzoeker.View
             {
                 // Use the route to initialize a MapRouteView.
                 MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
-                viewOfRoute.RouteColor = Colors.Blue;
-                viewOfRoute.OutlineColor = Colors.Blue;
+                viewOfRoute.RouteColor = Colors.White;
+                viewOfRoute.OutlineColor = Colors.White;
 
                 // Add the new MapRouteView to the Routes collection
                 // of the MapControl.
