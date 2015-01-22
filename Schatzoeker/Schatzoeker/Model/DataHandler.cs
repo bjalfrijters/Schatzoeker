@@ -169,7 +169,7 @@ namespace Schatzoeker.Model
                 SQLiteConnection cnn = new SQLiteConnection(dbConnection);
 
                 Random rnd = new Random();
-                int randomnumber = rnd.Next(sum);
+                int randomnumber = rnd.Next(sum) + 1;
 
                 waypoint = cnn.Query<Waypoint>(
                     @"SELECT * FROM waypoint WHERE id = " + randomnumber );

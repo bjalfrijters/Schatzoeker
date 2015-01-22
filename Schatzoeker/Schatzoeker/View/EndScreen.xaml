@@ -8,7 +8,21 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-
-    </Grid>
+    <GridView>
+        <TextBlock TextWrapping="Wrap" Text="░░░░░░░░▄▄▄▀▀▀▄▄███▄
+░░░░░▄▀▀░░░░░░░▐░▀██▌
+░░░▄▀░░░░▄▄███░▌▀▀░▀█
+░░▄█░░▄▀▀▒▒▒▒▒▄▐░░░░█▌
+░▐█▀▄▀▄▄▄▄▀▀▀▀▌░░░░░▐█▄
+░▌▄▄▀▀░░░░░░░░▌░░░░▄███████▄
+░░░░░░░░░░░░░▐░░░░▐███████████▄
+░░░░░le░░░░░░░▐░░░░▐█████████████▄
+░░░░toucan░░░░░░▀▄░░░▐██████████████▄
+░░░░░░has░░░░░░░░▀▄▄████████████████▄
+░░░░░arrived░░░░░░░░░░░░█▀██████" Height="187"/>
+        <ListView>
+        <Button Name="Exit" Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Exit_Click"/>
+        <Button Name="Retry" Content="Try again!" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Retry_Click" />
+            </ListView>
+    </GridView>
 </Page>

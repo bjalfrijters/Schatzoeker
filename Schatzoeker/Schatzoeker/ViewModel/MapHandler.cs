@@ -25,9 +25,10 @@ namespace Schatzoeker.ViewModel
             return CurrentPoint;
         }
 
-        public void setCurrentPoint(Geopoint _currentPoint)
+        public async Task getCurrentPosition()
         {
-            CurrentPoint = _currentPoint;
+            CurrentPosition = await Geo.GetGeopositionAsync();
+            CurrentPoint = CurrentPosition.Coordinate.Point;
         }
 
     }

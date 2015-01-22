@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
 using Windows.Foundation;
@@ -35,13 +36,16 @@ namespace Schatzoeker.View
     {
         private Geolocator _geo;
         private MapIcon _meIcon = new MapIcon();
-        private DataHandler _dataHandler;
+        private DataHandler _dataHandler = null;
 
         public MapScreen()
         {
             this.InitializeComponent();
             GeofenceMonitor.Current.GeofenceStateChanged += OnGeofenceStateChanged;
-            _dataHandler = new DataHandler("Hoi", true);
+            if (_dataHandler == null)
+            {
+                _dataHandler = new DataHandler("Database", true);
+            }
         }
 
         /// <summary>
@@ -58,13 +62,33 @@ namespace Schatzoeker.View
             _geo.PositionChanged += geo_PositionChanged;
             _meIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/me.png"));
 
-            MapControl1.Style = MapStyle.None;
-
             Geoposition curPosition = await _geo.GetGeopositionAsync();
 
+            string difficultyString = ((string)e.Parameter);
+            int difficultyValue = Int32.Parse(difficultyString);
+
+            Debug.WriteLine(difficultyString);
+
+            if (difficultyValue == 0)
+            {
+                MapControl1.Style = MapStyle.AerialWithRoads;
+                await ShowRouteOnMap(curPosition.Coordinate.Point, _dataHandler.getRandomWaypoint().getLocation());
+            }
+            else if (difficultyValue == 1)
+            {
+                MapControl1.Style = MapStyle.AerialWithRoads;
+            }
+            else if (difficultyValue != 0 && difficultyValue != 1)
+            {
+                Debug.WriteLine("difficultyValue not specified");
+                MapControl1.Style = MapStyle.AerialWithRoads;
+                await ShowRouteOnMap(curPosition.Coordinate.Point, _dataHandler.getRandomWaypoint().getLocation());
+            }
+
+            MapControl1.Style = MapStyle.AerialWithRoads;
             MapControl1.MapElements.Add(_meIcon);
-            AddTreasureToMap();
-            //await ShowRouteOnMap(curPosition.Coordinate.Point, new Geopoint(new BasicGeoposition() { Latitude = 51.5889, Longitude = 4.7761 }));
+            
+            AddTreasureToMapWithGeofence();
 
             await MapControl1.TrySetViewAsync(curPosition.Coordinate.Point, 18, 0, 0, MapAnimationKind.Default);         
             
@@ -90,7 +114,8 @@ namespace Schatzoeker.View
                     }
                     else if (state == GeofenceState.Exited)
                     {
-                       //do nothing
+                        //do nothing
+                        Debug.WriteLine(GeofenceState.Exited.ToString());
                     }
                 }
             });
@@ -107,16 +132,27 @@ namespace Schatzoeker.View
             await MapControl1.TrySetViewAsync(location, 18, 0, 0, MapAnimationKind.None);
         }
 
-
-        public void AddTreasureToMap()
+        public void AddTreasureToMapWithGeofence()
         {
             MapIcon icon = new MapIcon();
-            //icon.Location = new Geopoint(new BasicGeoposition() { Latitude = 51.5889, Longitude = 004.7761 });
-            icon.Location = _dataHandler.getRandomWaypoint().getLocation();
-            icon.NormalizedAnchorPoint = new Point(0.5, 1.0);
+            Waypoint treasurePoint = _dataHandler.getRandomWaypoint();
+            icon.Location = treasurePoint.getLocation();
+            icon.NormalizedAnchorPoint = new Point(1.0, 2.0);
             icon.Title = "Schat";
             MapControl1.MapElements.Add(icon);
+
+            string fenceKey = new string(treasurePoint.Id.ToString().ToCharArray());
+
+            Geofence treasureFence = null;
+            BasicGeoposition treasure = icon.Location.Position;
+            Geocircle treasureCircle = new Geocircle(treasure, 30.0);
+
+            treasureFence = new Geofence(fenceKey, treasureCircle);
+
+            GeofenceMonitor.Current.Geofences.Add(treasureFence);
         }
+
+
         private async Task ShowRouteOnMap(Geopoint start, Geopoint end)
         {
 
@@ -139,11 +175,8 @@ namespace Schatzoeker.View
                 MapControl1.Routes.Add(viewOfRoute);
                 System.Diagnostics.Debug.WriteLine("MapScreen-ShowRouteOnMap: Added route to the map.");
                 // Fit the MapControl to the route.
-                //await map1.TrySetViewBoundsAsync(routeResult.Route.BoundingBox, null, Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
+                await MapControl1.TrySetViewBoundsAsync(routeResult.Route.BoundingBox, null, Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
             }
-
-            
-        }
-        
+        }     
     }
 }

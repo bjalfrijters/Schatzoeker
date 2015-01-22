@@ -1,4 +1,4 @@
-﻿using Schatzoeker.Model;
+﻿using Schatzoeker.View;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,16 +16,23 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
-namespace Schatzoeker.View
+namespace Schatzoeker
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class EndScreen : Page
+    public sealed partial class DifficultyPage : Page
     {
-        public EndScreen()
+        public int difficultyValue;
+        public DifficultyPage()
         {
             this.InitializeComponent();
+            difficultyValue = 2;
+
+            while(difficultyValue != 0 || difficultyValue != 1)
+            {
+                Start.IsEnabled = false;
+            }
         }
 
         /// <summary>
@@ -35,17 +42,24 @@ namespace Schatzoeker.View
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-          
+            
         }
 
-        private void Exit_Click(object sender, RoutedEventArgs e)
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            Application.Current.Exit();
+            difficultyValue = 0;
         }
 
-        private void Retry_Click(object sender, RoutedEventArgs e)
+        private void CheckBox_Checked_1(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(MainPage));
+            difficultyValue = 1;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            
+            var difficulty = difficultyValue.ToString();
+            this.Frame.Navigate(typeof (MapScreen), difficulty);
         }
     }
 }

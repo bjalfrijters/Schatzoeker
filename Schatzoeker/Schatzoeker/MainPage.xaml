@@ -8,9 +8,10 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <Button Content="Start" HorizontalAlignment="Left" Margin="132,157,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <Button Content="Exit" HorizontalAlignment="Left" Margin="132,240,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
+    <ListView>
+        <Button Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click" Height="52" Width="180"/>
+        <Button Content="Select Difficulty" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click_2" Height="52" Width="180" />
+        <Button Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click_1" Height="52" Width="180"/>
 
-    </Grid>
+    </ListView>
 </Page>
