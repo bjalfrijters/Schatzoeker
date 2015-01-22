@@ -64,10 +64,16 @@ namespace Schatzoeker.View
 
             Geoposition curPosition = await _geo.GetGeopositionAsync();
 
+            int difficultyValue = 2;
+
             string difficultyString = ((string)e.Parameter);
-            int difficultyValue = Int32.Parse(difficultyString);
+            if (difficultyString != null) { 
+            difficultyValue = Int32.Parse(difficultyString);
+            }
 
             Debug.WriteLine(difficultyString);
+
+            AddTreasureToMapWithGeofence();
 
             if (difficultyValue == 0)
             {
@@ -88,7 +94,7 @@ namespace Schatzoeker.View
             MapControl1.Style = MapStyle.AerialWithRoads;
             MapControl1.MapElements.Add(_meIcon);
             
-            AddTreasureToMapWithGeofence();
+            
 
             await MapControl1.TrySetViewAsync(curPosition.Coordinate.Point, 18, 0, 0, MapAnimationKind.Default);         
             
@@ -110,7 +116,7 @@ namespace Schatzoeker.View
 
                     if (state == GeofenceState.Entered)
                     {
-                        this.Frame.Navigate(typeof(EndScreen));
+                        this.Frame.Navigate(typeof(PuzzleScreen));
                     }
                     else if (state == GeofenceState.Exited)
                     {

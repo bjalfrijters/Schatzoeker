@@ -8,21 +8,11 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <GridView>
-        <TextBlock TextWrapping="Wrap" Text="░░░░░░░░▄▄▄▀▀▀▄▄███▄
-░░░░░▄▀▀░░░░░░░▐░▀██▌
-░░░▄▀░░░░▄▄███░▌▀▀░▀█
-░░▄█░░▄▀▀▒▒▒▒▒▄▐░░░░█▌
-░▐█▀▄▀▄▄▄▄▀▀▀▀▌░░░░░▐█▄
-░▌▄▄▀▀░░░░░░░░▌░░░░▄███████▄
-░░░░░░░░░░░░░▐░░░░▐███████████▄
-░░░░░le░░░░░░░▐░░░░▐█████████████▄
-░░░░toucan░░░░░░▀▄░░░▐██████████████▄
-░░░░░░has░░░░░░░░▀▄▄████████████████▄
-░░░░░arrived░░░░░░░░░░░░█▀██████" Height="187"/>
-        <ListView>
+    <StackPanel>
+        <TextBlock TextWrapping="Wrap" Text="Treasure Hunter" FontSize="40" HorizontalAlignment="Center" />
+        <ListView HorizontalAlignment="Center" VerticalAlignment="Center">
         <Button Name="Exit" Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Exit_Click"/>
         <Button Name="Retry" Content="Try again!" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Retry_Click" />
             </ListView>
-    </GridView>
+    </StackPanel>
 </Page>

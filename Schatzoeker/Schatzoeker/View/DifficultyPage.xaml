@@ -8,11 +8,11 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <ListView>
-        <TextBlock TextWrapping="Wrap" Text="'Select the Difficulty" FontSize="25" />
-        <CheckBox Content="Full map with routes" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="CheckBox_Checked"/>
-        <CheckBox Content="Full map without routes" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="CheckBox_Checked_1"/>
-        <Button Name="Start" Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click" />
+    <ListView HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock TextWrapping="Wrap" Text="Select the Difficulty" FontSize="25" />
+        <CheckBox Content="Full map with routes" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="CheckBox_Checked"/>
+        <CheckBox Content="Full map without routes" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="CheckBox_Checked_1"/>
+        <Button Name="Start" Content="Start" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click" />
 
     </ListView>
 </Page>

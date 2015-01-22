@@ -7,8 +7,30 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Name="Output">
+    <StackPanel>
+        <TextBlock TextWrapping="Wrap" Text="Treasure Hunter" FontSize="40" HorizontalAlignment="Center" />
+        <ListView HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock TextWrapping="Wrap" Text="Answer the following question:" FontSize="25" />
+                <TextBlock TextWrapping="Wrap" Text="2+2=" FontSize="25" HorizontalAlignment="Center"/>
+                <CheckBox Content="2" Checked="CheckBox_Checked" />
+                <CheckBox Name="Correct" Content="4" Checked="Correct_Checked" />
+                <Button Name="Submit_Button" Content="Submit" Click="Submit_Button_Click"/>
+        </ListView>
+    </StackPanel>
+    <Popup Name="Correct_PopUp" Canvas.ZIndex="1" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalOffset="-105" >
+            <StackPanel>
+                <TextBlock TextWrapping="Wrap" Text="You have won the game!" FontSize="20" HorizontalAlignment="Center" />
+                <Button Name="Continue" Content="Continue" Click="Continue_Click" HorizontalAlignment="Center" />
+            </StackPanel>
+    </Popup>
 
-    <GridView>
-        
-    </GridView>
+        <Popup Name="Wrong_PopUp" Canvas.ZIndex="1" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalOffset="-105" >
+            <StackPanel>
+                <TextBlock TextWrapping="Wrap" Text="You have lost the game!" FontSize="20" HorizontalAlignment="Center" />
+                <Button Name="Continue2" Content="Continue" Click="Continue_Click" HorizontalAlignment="Center" />
+            </StackPanel>
+        </Popup>
+
+    </Grid>
 </Page>

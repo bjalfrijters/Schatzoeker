@@ -23,9 +23,11 @@ namespace Schatzoeker.View
     /// </summary>
     public sealed partial class EndScreen : Page
     {
+        private int messageNumber;
         public EndScreen()
         {
             this.InitializeComponent();
+            messageNumber = 2;
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace Schatzoeker.View
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-          
+            
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)

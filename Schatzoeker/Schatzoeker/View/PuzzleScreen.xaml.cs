@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -22,9 +23,13 @@ namespace Schatzoeker.View
     /// </summary>
     public sealed partial class PuzzleScreen : Page
     {
+        public int answer;
+        public int correctAnswer;
         public PuzzleScreen()
         {
             this.InitializeComponent();
+            answer = 0;
+            correctAnswer = 0;
         }
 
         /// <summary>
@@ -34,6 +39,41 @@ namespace Schatzoeker.View
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            answer = 2;
+            correctAnswer = 0;
+
+        }
+
+        private void Correct_Checked(object sender, RoutedEventArgs e)
+        {
+            answer = 4;
+            correctAnswer = 1;
+        }
+
+        private void Submit_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Correct_PopUp.IsOpen && answer != 4 && !Wrong_PopUp.IsOpen)
+            {
+                Correct_PopUp.IsOpen = true;
+            }
+            else if (!Correct_PopUp.IsOpen && !Wrong_PopUp.IsOpen && answer == 2)
+            {
+                Correct_PopUp.IsOpen = false;
+                Wrong_PopUp.IsOpen = true;
+            }
+        }
+
+        private void Continue_Click(object sender, RoutedEventArgs e)
+        {
+            if (Correct_PopUp.IsOpen || Wrong_PopUp.IsOpen)
+            {
+                this.Frame.Navigate(typeof (EndScreen), correctAnswer);
+            }
         }
     }
 }

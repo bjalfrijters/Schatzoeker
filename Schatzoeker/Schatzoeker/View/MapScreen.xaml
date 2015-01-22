@@ -12,7 +12,7 @@
     <Grid>
         <StackPanel HorizontalAlignment="Stretch"
                 Margin="8,8,8,8" VerticalAlignment="Stretch" >
-            <TextBlock TextWrapping="NoWrap" Text="Zoek de schat!"
+            <TextBlock TextWrapping="NoWrap" Text="Happy hunting!"
                    FontSize="36" Margin="8,0,0,16"/>
             <Maps:MapControl
             x:Name="MapControl1"

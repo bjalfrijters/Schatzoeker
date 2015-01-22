@@ -7,11 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <StackPanel>
+        <ListView HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock TextWrapping="Wrap" Text="Treasure Hunter" FontSize="26" />
+            <Button Content="Quick Start" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click" Height="52" Width="180"/>
+            <Button Content="Select Difficulty" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click_2" Height="52" Width="180" />
+            <Button Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click_1" Height="52" Width="180"/>
 
-    <ListView>
-        <Button Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click" Height="52" Width="180"/>
-        <Button Content="Select Difficulty" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click_2" Height="52" Width="180" />
-        <Button Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click_1" Height="52" Width="180"/>
-
-    </ListView>
+        </ListView>
+    </StackPanel>
 </Page>
