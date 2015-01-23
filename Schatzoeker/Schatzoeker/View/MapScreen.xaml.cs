@@ -34,14 +34,16 @@ namespace Schatzoeker.View
     /// </summary>
     public sealed partial class MapScreen : Page
     {
-        private Geolocator _geo;
         private MapIcon _meIcon = new MapIcon();
         private DataHandler _dataHandler = null;
+        private Waypoint treasurePoint;
+        private MapHandler _mapHandler;
 
         public MapScreen()
         {
             this.InitializeComponent();
             GeofenceMonitor.Current.GeofenceStateChanged += OnGeofenceStateChanged;
+            _mapHandler = new MapHandler();
             if (_dataHandler == null)
             {
                 _dataHandler = new DataHandler("Database", true);
@@ -55,14 +57,14 @@ namespace Schatzoeker.View
         /// This parameter is typically used to configure the page.</param>
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _geo = new Geolocator();
-            _geo.DesiredAccuracyInMeters = 50;
-            _geo.MovementThreshold = 10;
-            _geo.ReportInterval = 1000;
-            _geo.PositionChanged += geo_PositionChanged;
+            _mapHandler.Geo = new Geolocator();
+            _mapHandler.Geo.DesiredAccuracyInMeters = 50;
+            _mapHandler.Geo.MovementThreshold = 10;
+            _mapHandler.Geo.ReportInterval = 1000;
+            _mapHandler.Geo.PositionChanged += geo_PositionChanged;
             _meIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/me.png"));
 
-            Geoposition curPosition = await _geo.GetGeopositionAsync();
+            Geoposition curPosition = await _mapHandler.Geo.GetGeopositionAsync();
 
             int difficultyValue = 2;
 
@@ -78,7 +80,7 @@ namespace Schatzoeker.View
             if (difficultyValue == 0)
             {
                 MapControl1.Style = MapStyle.AerialWithRoads;
-                await ShowRouteOnMap(curPosition.Coordinate.Point, _dataHandler.getRandomWaypoint().getLocation());
+                await ShowRouteOnMap(curPosition.Coordinate.Point, treasurePoint.getLocation());
             }
             else if (difficultyValue == 1)
             {
@@ -88,7 +90,7 @@ namespace Schatzoeker.View
             {
                 Debug.WriteLine("difficultyValue not specified");
                 MapControl1.Style = MapStyle.AerialWithRoads;
-                await ShowRouteOnMap(curPosition.Coordinate.Point, _dataHandler.getRandomWaypoint().getLocation());
+                await ShowRouteOnMap(curPosition.Coordinate.Point, treasurePoint.getLocation());
             }
 
             MapControl1.Style = MapStyle.AerialWithRoads;
@@ -141,7 +143,7 @@ namespace Schatzoeker.View
         public void AddTreasureToMapWithGeofence()
         {
             MapIcon icon = new MapIcon();
-            Waypoint treasurePoint = _dataHandler.getRandomWaypoint();
+            treasurePoint = _dataHandler.getRandomWaypoint();
             icon.Location = treasurePoint.getLocation();
             icon.NormalizedAnchorPoint = new Point(1.0, 2.0);
             icon.Title = "Schat";

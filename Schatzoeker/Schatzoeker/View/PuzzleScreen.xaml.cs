@@ -57,7 +57,7 @@ namespace Schatzoeker.View
 
         private void Submit_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (!Correct_PopUp.IsOpen && answer != 4 && !Wrong_PopUp.IsOpen)
+            if (!Correct_PopUp.IsOpen && answer == 4 && !Wrong_PopUp.IsOpen)
             {
                 Correct_PopUp.IsOpen = true;
             }

@@ -89,6 +89,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LINQExample.cs" />
     <Compile Include="View\DifficultyPage.xaml.cs">
       <DependentUpon>DifficultyPage.xaml</DependentUpon>
     </Compile>
