@@ -1,6 +1,8 @@
-﻿using Schatzoeker.View;
+﻿using Schatzoeker.Model;
+using Schatzoeker.View;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -23,6 +25,7 @@ namespace Schatzoeker
     /// </summary>
     public sealed partial class MainPage : Page
     {
+       // private ObservableCollection<Waypoint> _waypointViewModel = WaypointDataSource.GetWaypoints();
         
         public MainPage()
         {
@@ -69,5 +72,10 @@ namespace Schatzoeker
         {
             this.Frame.Navigate(typeof(DifficultyPage));
         }
+        /*
+        public ObservableCollection<Waypoint> WaypointModel
+        {
+            get { return this._waypointViewModel; }
+        } //*/
     }
 }
