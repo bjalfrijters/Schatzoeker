@@ -41,6 +41,7 @@ namespace Schatzoeker.View
         public MapScreen()
         {
             this.InitializeComponent();
+
             GeofenceMonitor.Current.GeofenceStateChanged += OnGeofenceStateChanged;
             if (_dataHandler == null)
             {
@@ -154,8 +155,9 @@ namespace Schatzoeker.View
             Geocircle treasureCircle = new Geocircle(treasure, 30.0);
 
             treasureFence = new Geofence(fenceKey, treasureCircle);
-
+            GeofenceMonitor.Current.Geofences.Clear();
             GeofenceMonitor.Current.Geofences.Add(treasureFence);
+            
         }
 
 

@@ -29,7 +29,7 @@ namespace Schatzoeker
             this.InitializeComponent();
             difficultyValue = 2;
 
-            while(difficultyValue != 0 || difficultyValue != 1)
+            if(difficultyValue != 0 || difficultyValue != 1)
             {
                 Start.IsEnabled = false;
             }
@@ -48,11 +48,13 @@ namespace Schatzoeker
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             difficultyValue = 0;
+            Start.IsEnabled = true;
         }
 
         private void CheckBox_Checked_1(object sender, RoutedEventArgs e)
         {
             difficultyValue = 1;
+            Start.IsEnabled = true;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
