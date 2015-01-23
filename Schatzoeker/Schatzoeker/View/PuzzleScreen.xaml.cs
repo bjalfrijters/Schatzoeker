@@ -23,13 +23,36 @@ namespace Schatzoeker.View
     /// </summary>
     public sealed partial class PuzzleScreen : Page
     {
-        public int answer;
+        public int choice;
         public int correctAnswer;
+        private int sum1;
+        private int sum2;
+        private int answerSum;
         public PuzzleScreen()
         {
             this.InitializeComponent();
-            answer = 0;
+            choice = 0;
             correctAnswer = 0;
+            Random rng = new Random();
+            sum1 = rng.Next(5);
+            sum2 = rng.Next(5);
+            answerSum = sum2 + sum1;
+            int wrong = rng.Next(10);
+            while (wrong == answerSum) {
+                wrong = rng.Next(10);
+            }
+            int temp = rng.Next(2);
+            if (temp == 0)
+            {
+                check1.Content = wrong.ToString();
+                check2.Content = answerSum.ToString();
+            }
+            else
+            {
+                check1.Content = answerSum.ToString();
+                check2.Content = wrong.ToString();
+            }
+            quest.Text = string.Format("{0}+{1}=", sum1, sum2);
         }
 
         /// <summary>
@@ -44,27 +67,27 @@ namespace Schatzoeker.View
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            answer = 2;
-            correctAnswer = 0;
+            choice = Convert.ToInt32(check1.Content);
 
         }
 
         private void Correct_Checked(object sender, RoutedEventArgs e)
         {
-            answer = 4;
-            correctAnswer = 1;
+            choice = Convert.ToInt32(check2.Content);
         }
 
         private void Submit_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (!Correct_PopUp.IsOpen && answer != 4 && !Wrong_PopUp.IsOpen)
+            if (!Correct_PopUp.IsOpen && !Wrong_PopUp.IsOpen && choice == answerSum)
             {
                 Correct_PopUp.IsOpen = true;
+                correctAnswer = 1;
             }
-            else if (!Correct_PopUp.IsOpen && !Wrong_PopUp.IsOpen && answer == 2)
+            else if (!Correct_PopUp.IsOpen && !Wrong_PopUp.IsOpen && choice != answerSum)
             {
                 Correct_PopUp.IsOpen = false;
                 Wrong_PopUp.IsOpen = true;
+                correctAnswer = 0;
             }
         }
 

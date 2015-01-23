@@ -66,22 +66,6 @@ namespace Schatzoeker.Model
                 throw new Exception(e.Message);
             }
 
-            try
-            {
-                SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-                //cnn.DropTable<Puzzle>();
-                cnn.Query<Puzzle>(@"CREATE TABLE IF NOT EXISTS
-                                puzzle (Id      INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                                            answer    VARCHAR( 140 )
-                            );");
-
-                cnn.Close();
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-
             fillDataBase();
         }
 
@@ -98,26 +82,12 @@ namespace Schatzoeker.Model
             Waypoints.Add(new Waypoint("2e bocht Valkenberg", new Geopoint(new BasicGeoposition() { Latitude = 51.59258, Longitude = 4.77806 })));
             Waypoints.Add(new Waypoint("Einde park", new Geopoint(new BasicGeoposition() { Latitude = 51.59059, Longitude = 4.77707 })));
 
-
-
-            List<Puzzle> puzzles = new List<Puzzle>();
-            puzzles.Add(new Puzzle("testing"));
-            puzzles.Add(new Puzzle("stoel"));
-            puzzles.Add(new Puzzle("deur"));
-            puzzles.Add(new Puzzle("kledingkast"));
-            puzzles.Add(new Puzzle("pennenbakje"));
-            puzzles.Add(new Puzzle("schoen"));
-            puzzles.Add(new Puzzle("muts"));
-
             try
             {
                 SQLiteConnection cnn = new SQLiteConnection(dbConnection);
                 foreach (Waypoint waypoint in Waypoints)
                     cnn.Insert(waypoint);
-
-                foreach (Puzzle puzzle in puzzles)
-                    cnn.Insert(puzzle);
-
+            
                 cnn.Commit();
                 cnn.Close();
             }
@@ -161,7 +131,7 @@ namespace Schatzoeker.Model
         /// 1 waypoint random gekozen uit de database
         /// </returns>
         public Waypoint getRandomWaypoint(){
-            List<Waypoint> waypoint;
+            IQueryable<Waypoint> waypoint;
             int sum = count("waypoint");
             try
             {
@@ -171,11 +141,20 @@ namespace Schatzoeker.Model
                 Random rnd = new Random();
                 int randomnumber = rnd.Next(sum) + 1;
 
-                waypoint = cnn.Query<Waypoint>(
-                    @"SELECT * FROM waypoint WHERE id = " + randomnumber );
+                //waypoint = cnn.Query<Waypoint>(
+                //    @"SELECT * FROM waypoint WHERE id = " + randomnumber );
+                var waypoints = cnn.Query<Waypoint>(
+                    @"SELECT * FROM waypoint")
+                    .AsQueryable();
+
+                // Omdat er linq in moet en de database het niet ondersteund hebben we het buiten de database gedaan
+                // dus eerst een iqueryable(list) ophalen en daar met een linq overheen gaan om de random er uit te pakken
+                waypoint = from x in waypoints
+                           where x.Id == randomnumber
+                           select x;
 
                 cnn.Close();
-                return waypoint[0];
+                return waypoint.First();
                ;
             }
             catch (Exception e)
@@ -190,82 +169,7 @@ namespace Schatzoeker.Model
         /// <returns>
         /// een lijst met alle puzzles uit de database
         /// </returns>
-        public List<Puzzle> getAllPuzzles()
-        {
-            try
-            {
-                SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-
-
-                List<Puzzle> puzzle = cnn.Query<Puzzle>(
-                    @"SELECT * FROM puzzle"
-                    ).ToList();
-
-                cnn.Close();
-                return puzzle;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// vraagt een random puzzle uit de database op.
-        /// </summary>     
-        /// <returns>
-        /// een random puzzle uit de database.
-        /// </returns>
-        public Puzzle getRandomPuzzle(){
-            int sum = count("puzzle");
-            
-            try
-            {
-                SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-
-                Random rnd = new Random();
-                int randomnumber = rnd.Next(sum);
-
-                List<Puzzle> puzzle = cnn.Query<Puzzle>(
-                    @"SELECT * FROM puzzle WHERE id = " + randomnumber
-                    ).ToList();
-
-                cnn.Close();
-                return puzzle[0];
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
-
-        /// <summary>
-        /// vraagt een specifieke puzzle op uit de database database aan de hand van een puzzle id.
-        /// </summary>
-        /// <param name="id">
-        /// de id van de puzzle die je wilt opvragen.
-        /// </param>       
-        /// <returns>
-        /// de aangevraagde puzzle. 
-        /// </returns>
-        public string getSpesificPuzzle(int id)
-        {
-            try
-            {
-                SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-
-                string query = "SELECT answer FROM puzzle WHERE Id = '" + id + "'";
-                List<Puzzle> Puzzles = cnn.Query<Puzzle>(query);
-                cnn.Close();
-                return Puzzles[0]._answer;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
+       
         private int count(string tableName)
         {
             try
@@ -273,7 +177,7 @@ namespace Schatzoeker.Model
                 SQLiteConnection cnn = new SQLiteConnection(dbConnection);
 
                 string query = "SELECT id FROM " + tableName;
-                List<Puzzle> Puzzles = cnn.Query<Puzzle>(query);
+                List<Waypoint> Puzzles = cnn.Query<Waypoint>(query);
                 cnn.Close();
                 return Puzzles.Count;
             }

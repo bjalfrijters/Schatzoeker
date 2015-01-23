@@ -12,9 +12,9 @@
         <TextBlock TextWrapping="Wrap" Text="Treasure Hunter" FontSize="40" HorizontalAlignment="Center" />
         <ListView HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock TextWrapping="Wrap" Text="Answer the following question:" FontSize="25" />
-                <TextBlock TextWrapping="Wrap" Text="2+2=" FontSize="25" HorizontalAlignment="Center"/>
-                <CheckBox Content="2" Checked="CheckBox_Checked" />
-                <CheckBox Name="Correct" Content="4" Checked="Correct_Checked" />
+                <TextBlock Name ="quest" TextWrapping="Wrap" Text="2+2=" FontSize="25" HorizontalAlignment="Center"/>
+                <CheckBox Name="check1" Content="2" Checked="CheckBox_Checked" />
+                <CheckBox Name="check2" Content="4" Checked="Correct_Checked" />
                 <Button Name="Submit_Button" Content="Submit" Click="Submit_Button_Click"/>
         </ListView>
     </StackPanel>
