@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Schatzoeker.View.EndScreen"
+    x:Class="Schatzoeker.View.HighscoreScreen"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Schatzoeker.View"
@@ -9,10 +9,13 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel>
-        <TextBlock TextWrapping="Wrap" Text="Treasure Hunter" FontSize="40" HorizontalAlignment="Center" />
         <ListView HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button Name="Exit" Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Exit_Click"/>
-        <Button Name="Retry" Content="Highscore" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Retry_Click" />
-            </ListView>
+            <TextBlock TextWrapping="NoWrap" Text="Treasure Hunter" FontSize="36" />
+        </ListView>
+        <ListView HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock TextWrapping="NoWrap" Text="Highscores" FontSize=" 30" />
+            <TextBlock TextWrapping="NoWrap" Text="" FontSize="25"/>
+            <TextBlock Name="HighscoreBlock" TextWrapping="NoWrap" Text="Test" FontSize="25" />
+        </ListView>
     </StackPanel>
 </Page>

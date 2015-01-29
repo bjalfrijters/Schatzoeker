@@ -16,7 +16,7 @@ namespace Schatzoeker.Model
         {
             if (_waypoints.Count == 0)
             {
-                _waypoints.Add(new Waypoint("Treasure", new Geopoint(new BasicGeoposition() { Latitude = 51.59380, Longitude = 4.77963 }));
+                _waypoints.Add(new Waypoint("Treasure", new Geopoint(new BasicGeoposition() { Latitude = 51.59380, Longitude = 4.77963 })));
             }
             return _waypoints;
         }

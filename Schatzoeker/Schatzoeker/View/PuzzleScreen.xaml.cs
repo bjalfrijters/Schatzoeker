@@ -28,6 +28,8 @@ namespace Schatzoeker.View
         private int sum1;
         private int sum2;
         private int answerSum;
+        private int score;
+        private int i = 0;
         public PuzzleScreen()
         {
             this.InitializeComponent();
@@ -95,7 +97,18 @@ namespace Schatzoeker.View
         {
             if (Correct_PopUp.IsOpen || Wrong_PopUp.IsOpen)
             {
-                this.Frame.Navigate(typeof (EndScreen), correctAnswer);
+                while(i < 4) 
+                {
+                    if (Correct_PopUp.IsOpen)
+                        score += 100;
+                    else
+                        score += 50;
+
+                    this.Frame.Navigate(typeof(MapScreen), score);
+                    i++;
+                }
+
+                this.Frame.Navigate(typeof(EndScreen));
             }
         }
     }

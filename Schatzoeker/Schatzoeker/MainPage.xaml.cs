@@ -25,7 +25,6 @@ namespace Schatzoeker
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private ObservableCollection<Waypoint> _waypointViewModel = WaypointDataSource.GetWaypoints();
         
         public MainPage()
         {
@@ -70,12 +69,8 @@ namespace Schatzoeker
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(DifficultyPage));
+            this.Frame.Navigate(typeof(HighscoreScreen));
         }
 
-        public ObservableCollection<Waypoint> WaypointModel
-        {
-            get { return this._waypointViewModel; }
-        }
     }
 }

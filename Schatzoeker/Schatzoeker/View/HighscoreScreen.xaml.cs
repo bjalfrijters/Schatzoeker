@@ -21,13 +21,14 @@ namespace Schatzoeker.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class EndScreen : Page
+    public sealed partial class HighscoreScreen : Page
     {
-        private int messageNumber;
-        public EndScreen()
+        private HighScore _highScore;
+        public HighscoreScreen()
         {
             this.InitializeComponent();
-            messageNumber = 2;
+            _highScore = new HighScore();
+            
         }
 
         /// <summary>
@@ -37,17 +38,11 @@ namespace Schatzoeker.View
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            
-        }
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Exit();
-        }
-
-        private void Retry_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(HighScoreScreen));
+            foreach(Player p in _highScore.sortedDictDesc.Keys) 
+            {
+                HighscoreBlock.Text += _highScore.sortedDictDesc.Keys.ToString() + "          " + _highScore.sortedDictDesc.Values.ToString() + "\n";
+            }
+               
         }
     }
 }

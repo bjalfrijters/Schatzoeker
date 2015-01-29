@@ -119,7 +119,7 @@ namespace Schatzoeker.View
 
                     if (state == GeofenceState.Entered)
                     {
-                        this.Frame.Navigate(typeof(PuzzleScreen));
+                            this.Frame.Navigate(typeof(PuzzleScreen));
                     }
                     else if (state == GeofenceState.Exited)
                     {
@@ -156,7 +156,23 @@ namespace Schatzoeker.View
             BasicGeoposition treasure = icon.Location.Position;
             Geocircle treasureCircle = new Geocircle(treasure, 30.0);
 
-            treasureFence = new Geofence(fenceKey, treasureCircle);
+            bool singleUse = true;
+
+            // want to listen for enter geofence, exit geofence and remove geofence events
+            // you can select a subset of these event states
+            MonitoredGeofenceStates mask = 0;
+
+            mask |= MonitoredGeofenceStates.Entered;
+            mask |= MonitoredGeofenceStates.Exited;
+            mask |= MonitoredGeofenceStates.Removed;
+
+            // setting up how long you need to be in geofence for enter event to fire
+            TimeSpan dwellTime;
+
+            dwellTime = new TimeSpan(10);
+
+
+            treasureFence = new Geofence(fenceKey, treasureCircle, mask, singleUse, dwellTime);
             GeofenceMonitor.Current.Geofences.Clear();
             GeofenceMonitor.Current.Geofences.Add(treasureFence);
             
