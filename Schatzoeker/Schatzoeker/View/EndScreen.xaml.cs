@@ -47,7 +47,7 @@ namespace Schatzoeker.View
 
         private void Retry_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(HighScoreScreen));
+            this.Frame.Navigate(typeof(HighscoreScreen));
         }
     }
 }
