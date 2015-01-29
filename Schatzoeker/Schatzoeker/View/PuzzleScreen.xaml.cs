@@ -30,18 +30,19 @@ namespace Schatzoeker.View
         private int answerSum;
         private int score;
         private int i = 0;
+        private int maxanswer = 40,ofset = 2;
         public PuzzleScreen()
         {
             this.InitializeComponent();
             choice = 0;
             correctAnswer = 0;
             Random rng = new Random();
-            sum1 = rng.Next(5);
-            sum2 = rng.Next(5);
+            sum1 = rng.Next(maxanswer/2) + (ofset / 2);
+            sum2 = rng.Next(maxanswer/2) + (ofset / 2);
             answerSum = sum2 + sum1;
-            int wrong = rng.Next(10);
+            int wrong = rng.Next(maxanswer) + ofset;
             while (wrong == answerSum) {
-                wrong = rng.Next(10);
+                wrong = rng.Next(maxanswer)+ofset;
             }
             int temp = rng.Next(2);
             if (temp == 0)
