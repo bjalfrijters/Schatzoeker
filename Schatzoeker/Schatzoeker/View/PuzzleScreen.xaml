@@ -20,15 +20,17 @@
     </StackPanel>
     <Popup Name="Correct_PopUp" Canvas.ZIndex="1" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalOffset="-105" >
             <StackPanel>
-                <TextBlock TextWrapping="Wrap" Text="You have won the game!" FontSize="20" HorizontalAlignment="Center" />
+                <TextBlock TextWrapping="Wrap" Text="Correct!" FontSize="20" HorizontalAlignment="Center" />
                 <Button Name="Continue" Content="Continue" Click="Continue_Click" HorizontalAlignment="Center" />
+                <Button Name="Stop" Content="Stop playing" Click="Stop2_Click" HorizontalAlignment="Center" />
             </StackPanel>
     </Popup>
 
         <Popup Name="Wrong_PopUp" Canvas.ZIndex="1" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalOffset="-105" >
             <StackPanel>
-                <TextBlock TextWrapping="Wrap" Text="You have lost the game!" FontSize="20" HorizontalAlignment="Center" />
+                <TextBlock TextWrapping="Wrap" Text="Wrong!" FontSize="20" HorizontalAlignment="Center" />
                 <Button Name="Continue2" Content="Continue" Click="Continue_Click" HorizontalAlignment="Center" />
+                <Button Name="Stop2" Content="Stop playing" Click="Stop2_Click" HorizontalAlignment="Center" />
             </StackPanel>
         </Popup>
 

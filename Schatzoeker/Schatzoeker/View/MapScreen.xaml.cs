@@ -38,6 +38,9 @@ namespace Schatzoeker.View
         private DataHandler _dataHandler = null;
         private Waypoint treasurePoint;
         private MapHandler _mapHandler;
+        private int score;
+        private string playerName;
+        private string message;
 
         public MapScreen()
         {
@@ -61,51 +64,56 @@ namespace Schatzoeker.View
             _mapHandler.Geo = new Geolocator();
             _mapHandler.Geo.DesiredAccuracyInMeters = 50;
             _mapHandler.Geo.MovementThreshold = 10;
-            _mapHandler.Geo.ReportInterval = 1000;
+            _mapHandler.Geo.ReportInterval = 100;
             _mapHandler.Geo.PositionChanged += geo_PositionChanged;
             _meIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/me.png"));
+            _meIcon.ZIndex = 2;
+     
+            GeofenceMonitor.Current.Geofences.Clear();
 
             Geoposition curPosition = await _mapHandler.Geo.GetGeopositionAsync();
 
-            int difficultyValue = 2;
+            if(Frame.BackStack.Last().SourcePageType == typeof(MainPage)) {
+                if (e.Parameter != null)
+                {
+                    var playerVar = e.Parameter;
+                    playerName = (String)playerVar;
+                    Debug.WriteLine(playerName + "name in mapscreen");
+                    
+                }
+            }
+            else if (this.Frame.BackStack.Last().SourcePageType == typeof(PuzzleScreen))
+            {
+            if (e.Parameter != null)
+            {
+                var messageVar = e.Parameter;
+                message = (String)messageVar;
+                char[] splitToken = { ':' };
+                string[] messageSplit = message.Split(splitToken);
+                playerName = messageSplit[0];
+                string scoreString = messageSplit[1];
+                score = Int32.Parse(scoreString);
+                Debug.WriteLine(message + "message in mapscreen");
 
-            string difficultyString = ((string)e.Parameter);
-            if (difficultyString != null) { 
-            difficultyValue = Int32.Parse(difficultyString);
+            }
             }
 
-            Debug.WriteLine(difficultyString);
+            message = playerName + ":" + score;
+
 
             AddTreasureToMapWithGeofence();
 
-            if (difficultyValue == 0)
-            {
-                MapControl1.Style = MapStyle.AerialWithRoads;
-                await ShowRouteOnMap(curPosition.Coordinate.Point, treasurePoint.getLocation());
-            }
-            else if (difficultyValue == 1)
-            {
-                MapControl1.Style = MapStyle.AerialWithRoads;
-            }
-            else if (difficultyValue != 0 && difficultyValue != 1)
-            {
-                Debug.WriteLine("difficultyValue not specified");
-                MapControl1.Style = MapStyle.AerialWithRoads;
-                await ShowRouteOnMap(curPosition.Coordinate.Point, treasurePoint.getLocation());
-            }
-
             MapControl1.Style = MapStyle.AerialWithRoads;
             MapControl1.MapElements.Add(_meIcon);
-            
-            
 
+            await ShowRouteOnMap(curPosition.Coordinate.Point, treasurePoint.getLocation());
             await MapControl1.TrySetViewAsync(curPosition.Coordinate.Point, 18, 0, 0, MapAnimationKind.Default);         
             
         }
 
         private async void OnGeofenceStateChanged(GeofenceMonitor sender, object e)
         {
-
+            Debug.WriteLine("I will go to another page");
             var reports = sender.ReadReports();
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,  () =>
@@ -116,10 +124,11 @@ namespace Schatzoeker.View
 
                     // this field can be used in case you need the id of geofence
                     var geofence = report.Geofence;
-
+                    Debug.WriteLine("I'm about to go to the other page");
                     if (state == GeofenceState.Entered)
                     {
-                            this.Frame.Navigate(typeof(PuzzleScreen));
+                        this.Frame.Navigate(typeof(PuzzleScreen), message);
+                        Debug.WriteLine("I should go to the other page");
                     }
                     else if (state == GeofenceState.Exited)
                     {
@@ -171,9 +180,7 @@ namespace Schatzoeker.View
 
             dwellTime = new TimeSpan(10);
 
-
             treasureFence = new Geofence(fenceKey, treasureCircle, mask, singleUse, dwellTime);
-            GeofenceMonitor.Current.Geofences.Clear();
             GeofenceMonitor.Current.Geofences.Add(treasureFence);
             
         }

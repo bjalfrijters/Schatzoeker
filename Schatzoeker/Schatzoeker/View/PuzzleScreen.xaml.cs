@@ -28,8 +28,10 @@ namespace Schatzoeker.View
         private int sum1;
         private int sum2;
         private int answerSum;
-        private int score;
-        private int i = 0;
+        private int score = 100;
+        private string message;
+        private string playerName;
+
         public PuzzleScreen()
         {
             this.InitializeComponent();
@@ -64,6 +66,22 @@ namespace Schatzoeker.View
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (this.Frame.BackStack.Last().SourcePageType == typeof(MapScreen))
+            {
+                if (e.Parameter != null)
+                {
+                    var messageVar = e.Parameter;
+                    message = (String)messageVar;
+                    char[] splitToken = { ':' };
+                    string[] messageSplit = message.Split(splitToken);
+                    playerName = messageSplit[0];
+                    string scoreString = messageSplit[1];
+                    score = Int32.Parse(scoreString);
+                    Debug.WriteLine(message + "puzzlescreen");
+
+                }
+            }
+            
             
         }
 
@@ -97,18 +115,29 @@ namespace Schatzoeker.View
         {
             if (Correct_PopUp.IsOpen || Wrong_PopUp.IsOpen)
             {
-                while(i < 4) 
-                {
+                
                     if (Correct_PopUp.IsOpen)
                         score += 100;
                     else
                         score += 50;
 
-                    this.Frame.Navigate(typeof(MapScreen), score);
-                    i++;
-                }
+                    message = playerName + ":" + score;
+                    this.Frame.Navigate(typeof(MapScreen), message);
+            }
+        }
 
-                this.Frame.Navigate(typeof(EndScreen));
+        private void Stop2_Click(object sender, RoutedEventArgs e)
+        {
+            if (Correct_PopUp.IsOpen || Wrong_PopUp.IsOpen)
+            {
+
+                if (Correct_PopUp.IsOpen)
+                    score += 100;
+                else
+                    score += 50;
+
+                message = playerName + ":" + score;
+                this.Frame.Navigate(typeof(HighscoreScreen), message);
             }
         }
     }

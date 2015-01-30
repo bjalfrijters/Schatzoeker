@@ -87,6 +87,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\HighScore.cs" />
+    <Compile Include="Model\HighscoreDataSource.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteAsync.cs" />
